@@ -4,6 +4,16 @@ import numpy as np
 img1 = cv2.imread('./samples/positive/IMG_2674.jpg', cv2.IMREAD_GRAYSCALE)
 img2 = cv2.imread('./samples/positive/IMG_2678.jpg', cv2.IMREAD_GRAYSCALE)
 
+
+def resize_to_480(img):
+    w, h = img.shape
+    scale = 480 / h
+    return cv2.resize(img, (480, int(w * scale)))
+
+
+img1 = resize_to_480(img1)
+img2 = resize_to_480(img2)
+
 detector = cv2.ORB.create()
 keypoints1, descriptors1 = detector.detectAndCompute(img1, None)
 keypoints2, descriptors2 = detector.detectAndCompute(img2, None)
