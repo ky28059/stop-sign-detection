@@ -1,4 +1,5 @@
 import os
+import time
 
 import cv2
 import numpy as np
@@ -14,6 +15,7 @@ def match_and_display(detector, matcher, reference, keypoints1, descriptors1, pa
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
     img = resize_to_480(img)
 
+    start = time.time()
     keypoints2, descriptors2 = detector.detectAndCompute(img, None)
 
     # Cast descriptors to F32 for FLANN
@@ -25,6 +27,9 @@ def match_and_display(detector, matcher, reference, keypoints1, descriptors1, pa
     for m, n in knn_matches:
         if m.distance < ratio_thresh * n.distance:
             good_matches.append(m)
+    end = time.time()
+
+    print(f'Matched features in {path} in {end - start}s')
 
     img_matches = np.empty((max(reference.shape[0], img.shape[0]), reference.shape[1] + img.shape[1], 3), dtype=np.uint8)
     cv2.drawMatches(
